@@ -13,33 +13,48 @@ HTTP_PREFIX="https://dl.dropboxusercontent.com/u/28458830/Podcast"
 
 import os
 import sys
+import time, pytz
 import Orgnode
 from feedgen.feed import FeedGenerator
 
 fg = FeedGenerator()
 fg.load_extension('podcast')
-fg.podcast.itunes_category('Technology', 'Podcasting')
-
-fg.id('http://lernfunk.de/media/654321')
-fg.title(u'遇见未知的自己')
-fg.author( {'name':'whoomin','email':'whoomin@gmail.com'} )
-fg.link( href='http://whoomin.marboo.biz', rel='alternate' )
-fg.logo('http://ex.com/logo.jpg')
-fg.subtitle('sub title')
-fg.link( href='http://larskiesow.de/test.atom', rel='self' )
-fg.language('en')
 
 nodelist = Orgnode.makelist(sys.argv[1])
-for n in nodelist:
+
+info = nodelist[0]
+properties = info.Properties()
+fg.podcast.itunes_category('Technology', 'Podcasting')
+
+fg.title(info.Heading())
+fg.author( {'name':properties['author'],'email':properties['email']} )
+fg.id(properties["id"])
+fg.link( href='http://whoomin.marboo.biz', rel='alternate' )
+fg.logo(properties["logo"])
+fg.subtitle(properties["subtitle"])
+fg.link(href=properties["link"], rel='self' )
+fg.language(properties["language"])
+fg.image(properties["image"], height="140", width="140")
+fg.rights(properties["copyright"])
+fg.podcast.itunes_author(properties["author"])
+fg.podcast.itunes_subtitle(properties["subtitle"])
+fg.podcast.itunes_summary(properties["summary"])
+#fg.podcast.itunes_keywords(properties["keywords"])
+#fg.ttl(1440)
+
+for i in range(1, len(nodelist)):
+    node = nodelist[i]
+    if node.Todo() == "DRAFT":
+        continue
     mp3_length = "1024"
     fe = fg.add_entry()
 
-    title = n.Heading()
-    category = {"term": n.Tag(), "scheme":"", "label":""}
-    link = "http://whoomin.marboo.biz/podcast/1"
-    link_dic = {"href":"", "length":mp3_length, "type": "audio/MPEG-3"}
+    title = node.Heading()
+    category = {"term": node.Tag(), "scheme":"", "label":""}
+    #link = "http://whoomin.marboo.biz/podcast/1"
+    link_dic = {"href":"", "length":mp3_length, "type": "audio/MPEG"}
 
-    properties = n.Properties()
+    properties = node.Properties()
     for item in properties:
         if item == "link":
             mp3_url = os.path.join(HTTP_PREFIX, properties[item])
@@ -52,13 +67,15 @@ for n in nodelist:
             fe.summary(summary)
         else:
             print item
+            print properties[item]
+
+    fe.pubdate(node.Closed().replace(tzinfo=pytz.timezone('Asia/Shanghai')))
 
     fe.title(title)
     fe.author({"name":"whoomin", "email":"whoomin@gmail.com"})
-    fe.guid(link)
+    #fe.guid(link)
     fe.link(link_dic)
     fe.category(category)
-    #fe.pubdate()
     #fe.duration(mp3_length)
 
 print fg.rss_str(pretty=True)
