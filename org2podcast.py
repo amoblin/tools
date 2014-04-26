@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # author: amoblin <amoblin@gmail.com>
-# file name: podcast-feedgen.py
+# file name: org2podcast.py
 # create date: 2013-12-16 23:25:26
 # This file is created from ~/.marboo/source/media/file_init/default.init.py
 # 本文件由 ~/.marboo/source/media/file_init/default.init.py 复制而来
@@ -58,13 +58,17 @@ for i in range(1, len(nodelist)):
     for item in properties:
         if item == "link":
             mp3_url = os.path.join(HTTP_PREFIX, properties[item])
-            fe.enclosure(mp3_url, mp3_length, "audio/MPEG-3")
+            fe.enclosure(mp3_url, mp3_length, "audio/MPEG")
         elif item == "description":
             description = "<![CDATA[ %s ]]>" % properties[item]
             fe.description(description, isSummary=1)
         elif item == "summary":
             summary = properties[item]
             fe.summary(summary)
+            fe.podcast.itunes_summary(summary)
+            fe.podcast.itunes_subtitle(summary)
+        elif item == "image":
+            fe.podcast.itunes_image(properties["image"])
         else:
             print item
             print properties[item]
@@ -73,7 +77,7 @@ for i in range(1, len(nodelist)):
 
     fe.title(title)
     fe.author({"name":"whoomin", "email":"whoomin@gmail.com"})
-    #fe.guid(link)
+    fe.guid(mp3_url)
     fe.link(link_dic)
     fe.category(category)
     #fe.duration(mp3_length)
