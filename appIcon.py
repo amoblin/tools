@@ -17,8 +17,13 @@ print origin_name
 print core_name
 print extension
 
-size = [29, 40, 50, 57, 72, 76]
+size = [29, 40, 50, 57, 72, 76, 1024]
 size_2 = [29, 40, 50, 57, 60, 72, 76]
+size_3 = [29, 40, 60]
+osx_size = [16, 32, 128, 256, 512]
+#size=[]
+#size_2=[]
+osx_size = []
 
 for i in size:
     filename = "%s-%d%s" % (core_name, i, extension)
@@ -29,3 +34,17 @@ for i in size_2:
     filename = "%s-%d@2x%s" % (core_name, i, extension)
     os.system("cp %s %s" % (origin_name, filename))
     os.system("sips -Z %s %s" % (i*2, filename))
+
+for i in size_3:
+    filename = "%s-%d@3x%s" % (core_name, i, extension)
+    os.system("cp %s %s" % (origin_name, filename))
+    os.system("sips -Z %s %s" % (i*3, filename))
+
+for i in osx_size:
+    filename = "%s-%d@2x%s" % (core_name, i, extension)
+    os.system("cp %s %s" % (origin_name, filename))
+    os.system("sips -Z %s %s" % (i*2, filename))
+
+    filename = "%s-%d%s" % (core_name, i, extension)
+    os.system("cp %s %s" % (origin_name, filename))
+    os.system("sips -Z %s %s" % (i, filename))

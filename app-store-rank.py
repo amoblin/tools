@@ -12,12 +12,9 @@ import datetime
 import os
 
 LIMIT = 500
-#APP_ID = 732855809
 APP_ID = 848880040
 Bundle_ID = "com.Mofunsky.EnglishMofunShow"
 NUM = 500
-#keywords = "电影,美剧,英剧,英语,口语,演讲,MOOC,看电影,学英语,魔方,魔方英语,模仿秀,听力,练习,词汇,四级,六级,托福,雅思,考研,BEC,高考"
-#keywords = "英语口语,英语流利说,疯狂英语,速记单词,英语词典,英语听力,英语学习,学英语,有声英语,听英语,单词速记,cet,词汇,托福,雅思,出国,美剧,每日英语,模仿秀,魔方秀,配音,英文歌曲"
 
 keywords = "演奏,钢琴,键盘,piano,keyboard,乐曲,傻瓜,傻瓜音乐家,伴奏,节奏大师,音乐"
 
